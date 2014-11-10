@@ -3,6 +3,7 @@ package com.puppycrawl.tools.checkstyle.ast.web.viewer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,15 +21,18 @@ import org.springframework.web.client.RestTemplate;
 
 import com.puppycrawl.tools.Utils;
 import com.puppycrawl.tools.json.domain.MyAST;
-import com.vaadin.Application;
+import com.vaadin.annotations.Title;
+import com.vaadin.server.Page;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TreeTable;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 /**
  * Represents the viewer of AST. Viewer contains code area for input java source and
@@ -37,35 +41,32 @@ import com.vaadin.ui.Window;
  * @author <a href="mailto:nesterenko-aleksey@list.ru">Aleksey Nesterenko</a>
  *
  */
-public final class AstWebViewer extends Application
+@Title("AST viewer")
+public final class AstWebViewer extends UI
 {
 
 	private static final long serialVersionUID = 1L;
 
-	private Window window;
-
 	private TreeTable resultArea;
-
+	
 	private TextArea codeArea;
 	
 	private Button button;
 
 	@Override
-	public void init()
+	public void init(VaadinRequest request)
 	{
-		
-		window = new Window("Checkstyle Runner");
-		window.setSizeFull();
 
 		HorizontalSplitPanel splitPanel = new HorizontalSplitPanel();
 		splitPanel.setSplitPosition(40);
+		VerticalLayout layout = new VerticalLayout();
+		layout.setSizeFull();
 		VerticalLayout leftLayout = new VerticalLayout();
 		VerticalLayout rightLayout = new VerticalLayout();
 		rightLayout.setSizeFull();
 
-		codeArea = new TextArea("Input");
+		codeArea = new TextArea();
 		codeArea.setImmediate(true);
-		codeArea.setInputPrompt("Please enter the code here");
 		codeArea.setSizeFull();
 		
 		HorizontalLayout bottomLeftLayout = new HorizontalLayout();
@@ -75,14 +76,14 @@ public final class AstWebViewer extends Application
 		leftLayout.setSizeFull();
 
 		button = new Button("Process");
-		button.addListener(new ParsingClickListener());
+		button.addClickListener(new ParsingClickListener());
 		button.setImmediate(true);
 		
 		bottomLeftLayout.addComponent(button);
 		leftLayout.addComponent(bottomLeftLayout);
 		
 		resultArea = new TreeTable("AST");
-		resultArea.addContainerProperty("Name", String.class, null);
+		resultArea.addContainerProperty("Name", MyAST.class, null);
 		resultArea.addContainerProperty("Type", Integer.class, 0);
 		resultArea.addContainerProperty("LineNo", Integer.class, 0);
 		resultArea.addContainerProperty("ColumnNo", Integer.class, 0);
@@ -97,8 +98,9 @@ public final class AstWebViewer extends Application
 		splitPanel.addComponent(leftLayout);
 		splitPanel.addComponent(rightLayout);
 		
-		window.setContent(splitPanel);
-		setMainWindow(window);
+		layout.addComponent(splitPanel);
+		
+		setContent(layout);
 
 	}
 
@@ -122,9 +124,32 @@ public final class AstWebViewer extends Application
 			
 			} else if (responseEntity.getStatusCode()
 						== HttpStatus.NON_AUTHORITATIVE_INFORMATION) {
-				
-					window.showNotification(responseString);
+					
+					Notification notification = new Notification(responseString);
+					notification.show(Page.getCurrent());
 				}
+		}
+		
+		/**
+		 * Sends data from codeArea to ast-web-service via Post-request
+		 * and receives AST represented in Json format.
+		 * @return
+		 * 		Response entity containing Json string.
+		 */
+		private ResponseEntity<String> sendRequestAndReceiveResponse() {
+			
+			RestTemplate restTemplate = new RestTemplate();
+			
+			String fullText = codeArea.getValue().toString();
+			
+			HttpHeaders requestHeaders = new HttpHeaders();
+			requestHeaders.setContentType(MediaType.TEXT_PLAIN);
+			HttpEntity<String> requestBody = new HttpEntity<>(fullText);
+			String astServiceUrl = "http://checkstyle-ast-service.appspot.com/ast/json";
+			ResponseEntity<String> responseEntity = restTemplate.exchange(astServiceUrl,
+					HttpMethod.POST, requestBody, String.class);
+			
+			return responseEntity;
 		}
 
 		/**
@@ -146,7 +171,8 @@ public final class AstWebViewer extends Application
 			} catch (IOException e) {
 				
 				String exceptionTrace = ExceptionUtils.getFullStackTrace(e);
-				window.showNotification(exceptionTrace);
+				Notification notification = new Notification(exceptionTrace);
+				notification.show(Page.getCurrent());
 			}
 
 			Iterator<JsonNode> iterator = rootNode.getElements();
@@ -163,7 +189,7 @@ public final class AstWebViewer extends Application
 
 			for (JsonNode jsonNode : nodesList) {
 				
-				List<MyAST> myAstChildrenList = Utils.getMyAstChildren(jsonNode);
+				List<MyAST> myAstChildrenList = getMyAstChildren(jsonNode);
 				MyAST myNodeAst = Utils.convertJsonNodeToMyAstNode(jsonNode,
 						myAstChildrenList);
 				
@@ -172,32 +198,72 @@ public final class AstWebViewer extends Application
 
 			Set<MyAST> allAstElementsSet = Utils.getAstElementsSet(myAstList);
 			
-			Map<MyAST, MyAST> childrenToParentMap = Utils.getChildrenToParentMap(myAstList);
+			Map<MyAST, MyAST> childrenToParentMap = getChildrenToParentMap(myAstList);
 			
 			printTree(allAstElementsSet, childrenToParentMap);
 		}
-
+		
 		/**
-		 * Sends data from codeArea to ast-web-service via Post-request
-		 * and receives AST represented in Json format.
-		 * @return
-		 * 		Response entity containing Json string.
+		 * Returns child nodes of each root node from Json converted to MyAST domain object 
+		 * @param jsonNode
+		 * 			node of AST in Json format
+		 * @return List of child nodes represented in MyAST domain object.
 		 */
-		private ResponseEntity<String> sendRequestAndReceiveResponse() {
+		private List<MyAST> getMyAstChildren(JsonNode jsonNode) {
 			
-			RestTemplate restTemplate = new RestTemplate();
+			int childCount = jsonNode.size();
 			
-			String fullText = codeArea.getValue().toString();
+			List<MyAST> myAstChildrenList = new ArrayList<>(childCount);
 			
-			HttpHeaders requestHeaders = new HttpHeaders();
-			requestHeaders.setContentType(MediaType.TEXT_PLAIN);
-			HttpEntity<String> requestBody = new HttpEntity<>(fullText);
-			String astServiceUrl = "http://checkstyle-ast-viewer.appspot.com/ast/json";
-			ResponseEntity<String> responseEntity = restTemplate.exchange(astServiceUrl,
-					HttpMethod.POST, requestBody, String.class);
-			return responseEntity;
+			JsonNode jsonChildren = jsonNode.findValue("Child nodes:");
+			
+			if (jsonChildren != null) {
+			
+				Iterator<JsonNode> jsonChildrenIterator = jsonChildren.getElements();
+		
+				while (jsonChildrenIterator.hasNext()) {
+					JsonNode jsonChildNode = jsonChildrenIterator.next();
+					MyAST myChildAst = Utils.convertJsonNodeToMyAstNode(jsonChildNode,
+							getMyAstChildren(jsonChildNode));
+					
+					myAstChildrenList.add(myChildAst);
+				}
+			} 
+			
+			if (myAstChildrenList.isEmpty()) {
+				
+				myAstChildrenList = null;
+			}
+			
+			return myAstChildrenList;
 		}
 		
+		/**
+		 * Returns Map containing pairs child-parent of AST nodes.
+		 * @param myAstList
+		 * 			List of MyAST domain objects.
+		 * @return Map with child-parent pairs.
+		 */
+		private Map<MyAST, MyAST> getChildrenToParentMap(List<MyAST> myAstList) {
+			
+			Map<MyAST, MyAST> childrenToParentMap = new LinkedHashMap<>();
+					
+			for (MyAST myAstNode : myAstList) {
+				
+				if (myAstNode.getChildren() != null) {
+					
+					for (MyAST myAstChildNode : myAstNode.getChildren()) {
+						
+						childrenToParentMap.put(myAstChildNode, myAstNode);
+					}
+					
+					childrenToParentMap.putAll(getChildrenToParentMap(myAstNode.getChildren()));
+				}
+			}
+			
+			return childrenToParentMap;
+		}
+
 		/**
 		 * Prints AST Tree 
 		 * @param myAstSet
@@ -230,5 +296,5 @@ public final class AstWebViewer extends Application
 		}
 		
 	}
-	
+
 }

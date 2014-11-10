@@ -4,11 +4,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.codehaus.jackson.JsonGenerationException;
@@ -17,6 +14,7 @@ import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import antlr.ANTLRException;
 import antlr.RecognitionException;
 import antlr.TokenStreamException;
 
@@ -27,9 +25,6 @@ import com.puppycrawl.tools.checkstyle.grammars.GeneratedJavaRecognizer;
 import com.puppycrawl.tools.json.domain.MyAST;
 
 /**
- * Utilities class containing methods like converting java source to DetailAST,
- * converting DetailAST to MyAST domain object, MyAST to Json, Json to MyAST, etc.
- * 
  * @author <a href="mailto:nesterenko-aleksey@list.ru">Aleksey Nesterenko</a>
  */
 public final class Utils {
@@ -43,12 +38,11 @@ public final class Utils {
 	 * @throws ANTLRException
 	 *             if the file is not a Java source
 	 */
-	public final static DetailAST parse(String fullText) throws RecognitionException,
+	public static final DetailAST parse(String fullText) throws RecognitionException,
 			TokenStreamException {
 		
 		Reader sr = new StringReader(fullText);
 		GeneratedJavaLexer lexer = new GeneratedJavaLexer(sr);
-		lexer.setFilename("test");
 		
 		// Ugly hack to skip comments support for now
 		lexer.setCommentListener(new CommentListener() {
@@ -68,7 +62,6 @@ public final class Utils {
 		lexer.setTreatEnumAsKeyword(true);
 		
 		GeneratedJavaRecognizer parser = new GeneratedJavaRecognizer(lexer);
-		parser.setFilename("test");
 		parser.setASTNodeClass(DetailAST.class.getName());
 		parser.compilationUnit();
 
@@ -78,7 +71,7 @@ public final class Utils {
 	
 	/**
 	 * Gets Json representation of an AST object.
-	 * @param astTree
+	 * @param ast
 	 * 			AST object.
 	 * @return
 	 * 			String containing Json representation.
@@ -87,18 +80,21 @@ public final class Utils {
 	 * @throws JsonMappingException
 	 * @throws JsonProcessingException
 	 */
-	public final static String getJsonFromAst(DetailAST astTree) throws IOException,
+	public final static String toJson(DetailAST ast) throws IOException,
 			JsonGenerationException, JsonMappingException,
 			JsonProcessingException {
 		
 		StringBuilder jsonStringBuilder = new StringBuilder();
 		
-		DetailAST currentNodeAst = astTree;
+		DetailAST rootAst = ast;
+		
+		DetailAST currentNodeAst = rootAst;
 		
 		ObjectMapper mapper = new ObjectMapper();
 		jsonStringBuilder.append("{");
 		
 		while (currentNodeAst != null) {
+			
 			List<MyAST> myAstChildrenList = new ArrayList<>(currentNodeAst.getChildCount());
 			myAstChildrenList = getMyAstChildNodes(currentNodeAst);
 			MyAST myNodeAst = convertDetailAstToMyAst(currentNodeAst, myAstChildrenList);
@@ -118,8 +114,8 @@ public final class Utils {
 				
 				currentNodeAst = currentNodeAst.getFirstChild();
 			
-				astTree = astTree.getNextSibling();
-				currentNodeAst = astTree;
+				rootAst = rootAst.getNextSibling();
+				currentNodeAst = rootAst;
 			
 				jsonStringBuilder.append(",");
 			}
@@ -238,41 +234,6 @@ public final class Utils {
 	}
 	
 	/**
-	 * Returns child nodes of each root node from Json converted to MyAST domain object 
-	 * @param jsonNode
-	 * 			node of AST in Json format
-	 * @return List of child nodes represented in MyAST domain object.
-	 */
-	public final static List<MyAST> getMyAstChildren(JsonNode jsonNode) {
-		
-		int childCount = jsonNode.size();
-		
-		List<MyAST> myAstChildrenList = new ArrayList<>(childCount);
-		
-		JsonNode jsonChildren = jsonNode.findValue("Child nodes:");
-		
-		if (jsonChildren != null) {
-		
-			Iterator<JsonNode> jsonChildrenIterator = jsonChildren.getElements();
-	
-			while (jsonChildrenIterator.hasNext()) {
-				JsonNode jsonChildNode = jsonChildrenIterator.next();
-				MyAST myChildAst = convertJsonNodeToMyAstNode(jsonChildNode,
-						getMyAstChildren(jsonChildNode));
-				
-				myAstChildrenList.add(myChildAst);
-			}
-		} 
-		
-		if (myAstChildrenList.isEmpty()) {
-			
-			myAstChildrenList = null;
-		}
-		
-		return myAstChildrenList;
-	}
-	
-	/**
 	 * Returns Set containing all AST primitive (without child nodes) elements
 	 * @param myAstList
 	 * 			List of MyAST domain objects.
@@ -300,31 +261,4 @@ public final class Utils {
 		return allAstElementsSet;
 	}
 	
-	/**
-	 * Returns Map containing pairs child-parent of AST nodes.
-	 * @param myAstList
-	 * 			List of MyAST domain objects.
-	 * @return Map with child-parent pairs.
-	 */
-	public static Map<MyAST, MyAST> getChildrenToParentMap(List<MyAST> myAstList) {
-		
-		Map<MyAST, MyAST> childrenToParentMap = new LinkedHashMap<>();
-				
-		for (MyAST myAstNode : myAstList) {
-			
-			if (myAstNode.getChildren() != null) {
-				
-				for (MyAST myAstChildNode : myAstNode.getChildren()) {
-					
-					childrenToParentMap.put(myAstChildNode, myAstNode);
-				}
-				
-				childrenToParentMap.putAll(getChildrenToParentMap(myAstNode.getChildren()));
-			}
-		}
-		
-		return childrenToParentMap;
-	}
-	
-
 }
