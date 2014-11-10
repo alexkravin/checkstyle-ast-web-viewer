@@ -54,7 +54,7 @@ public final class AstWebServiceController {
 			
 			URLDecoder.decode(fullText, "UTF-8");
 			DetailAST astTree = Utils.parse(fullText);
-			responseString = Utils.getJsonFromAst(astTree);
+			responseString = Utils.toJson(astTree);
 			responseEntity = new ResponseEntity<>(responseString, HttpStatus.OK);
 		} catch (IOException | ANTLRException e) {
 			
