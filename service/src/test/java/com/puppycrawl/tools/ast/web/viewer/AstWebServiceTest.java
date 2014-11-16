@@ -1,4 +1,4 @@
-package com.puppycrawl.tools;
+package com.puppycrawl.tools.ast.web.viewer;
 
 import static org.junit.Assert.assertEquals;
 
@@ -10,13 +10,8 @@ import java.io.Writer;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
-
-import antlr.RecognitionException;
-import antlr.TokenStreamException;
 
 /**
  * 
@@ -26,22 +21,24 @@ import antlr.TokenStreamException;
 public class AstWebServiceTest {
     
 	@Test
-    public void astToJsonConvertationTest() throws JsonGenerationException,
-    	JsonMappingException, RecognitionException, TokenStreamException, IOException {
+    public void astToJsonConvertationTest() throws IOException {
 		
-		URL testSource = getClass().getResource("/Testsource");
-		URL resultJson = getClass().getResource("/ast.json");
+		URL testInput = getClass().getResource("/com/puppycrawl/tools/ast/web/viewer/"
+				  + "AstWebServiceTestInput.java");
+		URL testExpected = getClass().getResource("/com/puppycrawl/tools/ast/web/viewer/"
+				  + "AstWebServiceTestExpected.json");
 		
-		String expectedResult = getWriterAsString(resultJson);
-		String javaSource = getWriterAsString(testSource);
+		String javaSource = getFileAsString(testInput);
+		String expectedJson = getFileAsString(testExpected);
 		
 		ResponseEntity<String> jsonFromAst = AstWebServiceController.javaSourceToJson(javaSource);
-		assertEquals(expectedResult.trim(), jsonFromAst.getBody());
+		assertEquals(expectedJson.trim(), jsonFromAst.getBody());
     }
 
-	private static String getWriterAsString(URL resultJson) throws IOException {
+	private static String getFileAsString(URL resultJson) throws IOException {
+		
 		BufferedReader generatedJsonReader = new BufferedReader(new InputStreamReader(resultJson.
-				openStream()));
+				  openStream()));
 		
 		Writer writer = new StringWriter();
 		IOUtils.copy(generatedJsonReader, writer);

@@ -17,11 +17,15 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
-import com.puppycrawl.tools.Utils;
-import com.puppycrawl.tools.json.domain.MyAST;
+import com.puppycrawl.tools.ast.web.viewer.Utils;
+import com.puppycrawl.tools.ast.web.viewer.json.domain.Ast;
 import com.vaadin.annotations.Title;
+import com.vaadin.data.Item;
+import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
@@ -83,7 +87,7 @@ public final class AstWebViewer extends UI
 		leftLayout.addComponent(bottomLeftLayout);
 		
 		resultArea = new TreeTable("AST");
-		resultArea.addContainerProperty("Name", MyAST.class, null);
+		resultArea.addContainerProperty("Name", Ast.class, null);
 		resultArea.addContainerProperty("Type", Integer.class, 0);
 		resultArea.addContainerProperty("LineNo", Integer.class, 0);
 		resultArea.addContainerProperty("ColumnNo", Integer.class, 0);
@@ -110,7 +114,7 @@ public final class AstWebViewer extends UI
 
 		/**
 		 * Sends data in codeArea to ast-web-service via Post-request, receives response in
-		 * Json format, converts each AST node to MyAST domain object and prints them in TreeTable
+		 * Json format, converts each AST node to Ast domain object and prints them in TreeTable
 		 */
 		public void buttonClick(ClickEvent event) {
 			
@@ -122,23 +126,17 @@ public final class AstWebViewer extends UI
 			
 				printAst(responseString);
 			
-			} else if (responseEntity.getStatusCode()
-						== HttpStatus.NON_AUTHORITATIVE_INFORMATION) {
+			} else if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
 					
-					Notification notification = new Notification(responseString);
-					notification.show(Page.getCurrent());
-				}
+				Notification notification = new Notification(responseString);
+				notification.show(Page.getCurrent());
+			}
 		}
 		
-		/**
-		 * Sends data from codeArea to ast-web-service via Post-request
-		 * and receives AST represented in Json format.
-		 * @return
-		 * 		Response entity containing Json string.
-		 */
 		private ResponseEntity<String> sendRequestAndReceiveResponse() {
 			
 			RestTemplate restTemplate = new RestTemplate();
+			
 			
 			String fullText = codeArea.getValue().toString();
 			
@@ -146,19 +144,28 @@ public final class AstWebViewer extends UI
 			requestHeaders.setContentType(MediaType.TEXT_PLAIN);
 			HttpEntity<String> requestBody = new HttpEntity<>(fullText);
 			String astServiceUrl = "http://checkstyle-ast-service.appspot.com/ast/json";
+			restTemplate.setErrorHandler(new ResponseErrorHandler() {
+					
+				@Override
+				public boolean hasError(ClientHttpResponse response) throws IOException {
+					
+					return true;
+				}
+					
+				@Override
+				public void handleError(ClientHttpResponse response) throws IOException {
+					
+					response.getBody();
+					
+				}
+			});
+			
 			ResponseEntity<String> responseEntity = restTemplate.exchange(astServiceUrl,
-					HttpMethod.POST, requestBody, String.class);
+					  HttpMethod.POST, requestBody, String.class);
 			
 			return responseEntity;
 		}
 
-		/**
-		 * Prints AST to TreeTable.
-		 * Firstly, converts AST in Json to AST in MyAST domain object,
-		 * Then prints in hierarchical tree representation.
-		 * @param responseString
-		 * 			Json string containing AST.
-		 */
 		private void printAst(String responseString) {
 			
 			ObjectMapper mapper = new ObjectMapper();
@@ -179,7 +186,7 @@ public final class AstWebViewer extends UI
 
 			List<JsonNode> nodesList = new ArrayList<>(rootNode.size());
 
-			List<MyAST> myAstList = new ArrayList<>(rootNode.size());
+			List<Ast> astList = new ArrayList<>(rootNode.size());
 
 			while (iterator.hasNext()) {
 				
@@ -189,110 +196,72 @@ public final class AstWebViewer extends UI
 
 			for (JsonNode jsonNode : nodesList) {
 				
-				List<MyAST> myAstChildrenList = getMyAstChildren(jsonNode);
-				MyAST myNodeAst = Utils.convertJsonNodeToMyAstNode(jsonNode,
-						myAstChildrenList);
+				List<Ast> astChildrenList = Utils.getAstChildren(jsonNode);
+				Ast astNode = Utils.convertJsonNodeToAstNode(jsonNode,
+						    astChildrenList);
 				
-				myAstList.add(myNodeAst);
+				astList.add(astNode);
 			}
 
-			Set<MyAST> allAstElementsSet = Utils.getAstElementsSet(myAstList);
+			final Set<Ast> allAstElementsSet = Utils.getAstElementsSet(astList);
 			
-			Map<MyAST, MyAST> childrenToParentMap = getChildrenToParentMap(myAstList);
+			Map<Ast, Ast> childrenToParentMap = getChildrenToParentMap(astList);
 			
 			printTree(allAstElementsSet, childrenToParentMap);
 		}
 		
-		/**
-		 * Returns child nodes of each root node from Json converted to MyAST domain object 
-		 * @param jsonNode
-		 * 			node of AST in Json format
-		 * @return List of child nodes represented in MyAST domain object.
-		 */
-		private List<MyAST> getMyAstChildren(JsonNode jsonNode) {
+		private Map<Ast, Ast> getChildrenToParentMap(List<Ast> astList) {
 			
-			int childCount = jsonNode.size();
-			
-			List<MyAST> myAstChildrenList = new ArrayList<>(childCount);
-			
-			JsonNode jsonChildren = jsonNode.findValue("Child nodes:");
-			
-			if (jsonChildren != null) {
-			
-				Iterator<JsonNode> jsonChildrenIterator = jsonChildren.getElements();
-		
-				while (jsonChildrenIterator.hasNext()) {
-					JsonNode jsonChildNode = jsonChildrenIterator.next();
-					MyAST myChildAst = Utils.convertJsonNodeToMyAstNode(jsonChildNode,
-							getMyAstChildren(jsonChildNode));
+			Map<Ast, Ast> childrenToParentMap = new LinkedHashMap<>();
 					
-					myAstChildrenList.add(myChildAst);
-				}
-			} 
-			
-			if (myAstChildrenList.isEmpty()) {
+			for (Ast astNode : astList) {
 				
-				myAstChildrenList = null;
-			}
-			
-			return myAstChildrenList;
-		}
-		
-		/**
-		 * Returns Map containing pairs child-parent of AST nodes.
-		 * @param myAstList
-		 * 			List of MyAST domain objects.
-		 * @return Map with child-parent pairs.
-		 */
-		private Map<MyAST, MyAST> getChildrenToParentMap(List<MyAST> myAstList) {
-			
-			Map<MyAST, MyAST> childrenToParentMap = new LinkedHashMap<>();
+				if (astNode.getChildren() != null) {
 					
-			for (MyAST myAstNode : myAstList) {
-				
-				if (myAstNode.getChildren() != null) {
-					
-					for (MyAST myAstChildNode : myAstNode.getChildren()) {
+					for (Ast astChildNode : astNode.getChildren()) {
 						
-						childrenToParentMap.put(myAstChildNode, myAstNode);
+						childrenToParentMap.put(astChildNode, astNode);
 					}
 					
-					childrenToParentMap.putAll(getChildrenToParentMap(myAstNode.getChildren()));
+					childrenToParentMap.putAll(getChildrenToParentMap(astNode.getChildren()));
 				}
 			}
 			
 			return childrenToParentMap;
 		}
 
-		/**
-		 * Prints AST Tree 
-		 * @param myAstSet
-		 * 			Set of all objects in tree
-		 * @param childrenToParentMap
-		 * 			Map containing pairs child-parent
-		 */
-		private void printTree(Set<MyAST> myAstSet, Map<MyAST, MyAST> childrenToParentMap) {
+		private void printTree(Set<Ast> astSet, Map<Ast, Ast> childrenToParentMap) {
 			
-			for (MyAST myAstNode : myAstSet) {
+			HierarchicalContainer container = new HierarchicalContainer();
+			
+			container.addContainerProperty("Name", Ast.class, null);
+			container.addContainerProperty("Type", Integer.class, 0);
+			container.addContainerProperty("LineNo", Integer.class, 0);
+			container.addContainerProperty("ColumnNo", Integer.class, 0);
+			
+			for (Ast node : astSet) {
 				
-				resultArea.addItem(getTreeTableNode(myAstNode), myAstNode);
+				addContent(container, node);
 			}
 			
-			for (Map.Entry<MyAST, MyAST> entry : childrenToParentMap.entrySet()) {
+			for (Map.Entry<Ast, Ast> entry : childrenToParentMap.entrySet()) {
 				
-				resultArea.setParent(entry.getKey(), entry.getValue());
+				container.setParent(entry.getKey(), entry.getValue());
 			}
+			
+			resultArea.setContainerDataSource(container);
 			
 		}
-		
-		/**
-		 * Returns Object array containing information about node.
-		 * @param myAstNode
-		 */
-		private Object[] getTreeTableNode(MyAST myAstNode) {
+
+		@SuppressWarnings("unchecked")
+		private void addContent(HierarchicalContainer container, Ast astNode) {
 			
-			return new Object[] { myAstNode, myAstNode.getType(), myAstNode.getLineNo(),
-					myAstNode.getColumnNo() };
+			Item item = container.addItem(astNode);
+			
+			item.getItemProperty("Name").setValue(astNode);
+			item.getItemProperty("Type").setValue(astNode.getType());
+			item.getItemProperty("LineNo").setValue(astNode.getLineNo());
+			item.getItemProperty("ColumnNo").setValue(astNode.getColumnNo());
 		}
 		
 	}

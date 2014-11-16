@@ -171,33 +171,33 @@
 					<packagingExcludes>VAADIN/gwt-unitCache/</packagingExcludes>
 				</configuration>
 			</plugin>
-<!-- 			<plugin> -->
-<!-- 				<groupId>org.apache.maven.plugins</groupId> -->
-<!-- 				<artifactId>maven-dependency-plugin</artifactId> -->
-<!-- 				<version>2.9</version> -->
-<!-- 				<executions> -->
-<!-- 					<execution> -->
-<!-- 						<id>src-dependencies</id> -->
-<!-- 						<phase>prepare-package</phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>unpack</goal> -->
-<!-- 						</goals> -->
-<!-- 						<configuration> -->
-<!-- 							<artifactItems> -->
-<!-- 								<artifactItem> -->
-<!-- 									<groupId>org.vaadin.addons</groupId> -->
-<!-- 									<artifactId>aceeditor</artifactId> -->
-<!-- 									<version>0.8.12</version> -->
-<!-- 									<type>jar</type> -->
-<!-- 									<includes>**/client/</includes> -->
-<!-- 									<outputDirectory>${project.build.directory}/${project.build.finalName}/</outputDirectory> -->
-<!-- 								</artifactItem> -->
-<!-- 							</artifactItems> -->
-<!-- 							other configurations here -->
-<!-- 						</configuration> -->
-<!-- 					</execution> -->
-<!-- 				</executions> -->
-<!-- 			</plugin> -->
+			<!-- <plugin> -->
+			<!-- <groupId>org.apache.maven.plugins</groupId> -->
+			<!-- <artifactId>maven-dependency-plugin</artifactId> -->
+			<!-- <version>2.9</version> -->
+			<!-- <executions> -->
+			<!-- <execution> -->
+			<!-- <id>src-dependencies</id> -->
+			<!-- <phase>prepare-package</phase> -->
+			<!-- <goals> -->
+			<!-- <goal>unpack</goal> -->
+			<!-- </goals> -->
+			<!-- <configuration> -->
+			<!-- <artifactItems> -->
+			<!-- <artifactItem> -->
+			<!-- <groupId>org.vaadin.addons</groupId> -->
+			<!-- <artifactId>aceeditor</artifactId> -->
+			<!-- <version>0.8.12</version> -->
+			<!-- <type>jar</type> -->
+			<!-- <includes>**/client/</includes> -->
+			<!-- <outputDirectory>${project.build.directory}/${project.build.finalName}/</outputDirectory> -->
+			<!-- </artifactItem> -->
+			<!-- </artifactItems> -->
+			<!-- other configurations here -->
+			<!-- </configuration> -->
+			<!-- </execution> -->
+			<!-- </executions> -->
+			<!-- </plugin> -->
 			<plugin>
 				<groupId>com.google.appengine</groupId>
 				<artifactId>appengine-maven-plugin</artifactId>
@@ -350,6 +350,11 @@
 			<groupId>com.puppycrawl.tools</groupId>
 			<artifactId>checkstyle</artifactId>
 			<version>5.7</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>18.0</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
