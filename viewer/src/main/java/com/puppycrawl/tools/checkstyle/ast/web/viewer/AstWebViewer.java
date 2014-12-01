@@ -3,13 +3,11 @@ package com.puppycrawl.tools.checkstyle.ast.web.viewer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -21,8 +19,6 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
-import com.puppycrawl.tools.ast.web.viewer.Utils;
-import com.puppycrawl.tools.ast.web.viewer.json.domain.Ast;
 import com.vaadin.annotations.Title;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
@@ -87,8 +83,8 @@ public final class AstWebViewer extends UI
 		leftLayout.addComponent(bottomLeftLayout);
 		
 		resultArea = new TreeTable("AST");
-		resultArea.addContainerProperty("Name", Ast.class, null);
-		resultArea.addContainerProperty("Type", Integer.class, 0);
+		resultArea.addContainerProperty("Name", String.class, null);
+		resultArea.addContainerProperty("Type", String.class, 0);
 		resultArea.addContainerProperty("LineNo", Integer.class, 0);
 		resultArea.addContainerProperty("ColumnNo", Integer.class, 0);
 		resultArea.setSizeFull();
@@ -124,7 +120,16 @@ public final class AstWebViewer extends UI
 			
 			if (responseEntity.getStatusCode() == HttpStatus.OK) {
 			
-				printAst(responseString);
+				try {
+					
+					printAst(responseString);
+				} catch (IOException e) {
+					
+					String exceptionTrace = ExceptionUtils.getFullStackTrace(e);
+					
+					Notification notification = new Notification(exceptionTrace);
+					notification.show(Page.getCurrent());
+				}
 			
 			} else if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
 					
@@ -166,87 +171,43 @@ public final class AstWebViewer extends UI
 			return responseEntity;
 		}
 
-		private void printAst(String responseString) {
-			
+		private void printAst(String responseString) throws JsonParseException, IOException {
+
 			ObjectMapper mapper = new ObjectMapper();
-
-			JsonNode rootNode = null;
-
-			try {
 				
-				rootNode = mapper.readTree(responseString);
-			} catch (IOException e) {
-				
-				String exceptionTrace = ExceptionUtils.getFullStackTrace(e);
-				Notification notification = new Notification(exceptionTrace);
-				notification.show(Page.getCurrent());
-			}
-
-			Iterator<JsonNode> iterator = rootNode.getElements();
-
-			List<JsonNode> nodesList = new ArrayList<>(rootNode.size());
-
-			List<Ast> astList = new ArrayList<>(rootNode.size());
-
-			while (iterator.hasNext()) {
-				
-				JsonNode element = iterator.next();
-				nodesList.add(element);
-			}
-
-			for (JsonNode jsonNode : nodesList) {
-				
-				List<Ast> astChildrenList = Utils.getAstChildren(jsonNode);
-				Ast astNode = Utils.convertJsonNodeToAstNode(jsonNode,
-						    astChildrenList);
-				
-				astList.add(astNode);
-			}
-
-			final Set<Ast> allAstElementsSet = Utils.getAstElementsSet(astList);
+			Iterator<JsonNode> rootNode = mapper.readTree(responseString).iterator();
 			
-			Map<Ast, Ast> childrenToParentMap = getChildrenToParentMap(astList);
+			List<JsonNode> jsonNodesList = new ArrayList<>();
 			
-			printTree(allAstElementsSet, childrenToParentMap);
+			while (rootNode.hasNext()) {
+				
+				JsonNode jsonNode = rootNode.next();
+				jsonNodesList.add(jsonNode);
+			}
+				
+
+			printTree(jsonNodesList);
 		}
 		
-		private Map<Ast, Ast> getChildrenToParentMap(List<Ast> astList) {
-			
-			Map<Ast, Ast> childrenToParentMap = new LinkedHashMap<>();
-					
-			for (Ast astNode : astList) {
-				
-				if (astNode.getChildren() != null) {
-					
-					for (Ast astChildNode : astNode.getChildren()) {
-						
-						childrenToParentMap.put(astChildNode, astNode);
-					}
-					
-					childrenToParentMap.putAll(getChildrenToParentMap(astNode.getChildren()));
-				}
-			}
-			
-			return childrenToParentMap;
-		}
-
-		private void printTree(Set<Ast> astSet, Map<Ast, Ast> childrenToParentMap) {
+		private void printTree(List<JsonNode> jsonNodesList) {
 			
 			HierarchicalContainer container = new HierarchicalContainer();
 			
-			container.addContainerProperty("Name", Ast.class, null);
-			container.addContainerProperty("Type", Integer.class, 0);
+			container.addContainerProperty("Name", String.class, null);
+			container.addContainerProperty("Type", String.class, 0);
 			container.addContainerProperty("LineNo", Integer.class, 0);
 			container.addContainerProperty("ColumnNo", Integer.class, 0);
 			
-			for (Ast node : astSet) {
+			for (JsonNode jsonNode : jsonNodesList) {
 				
-				addContent(container, node);
-			}
-			
-			for (Map.Entry<Ast, Ast> entry : childrenToParentMap.entrySet()) {
+				addContent(container, jsonNode);
 				
-				container.setParent(entry.getKey(), entry.getValue());
+				int id = Integer.parseInt(jsonNode.findValue("id").toString());
+				int parentId = Integer.parseInt(jsonNode.findValue("parentId").toString());
+
+				container.setChildrenAllowed(parentId, true);
+				container.setParent(id, parentId);
+				container.setChildrenAllowed(id, false);
 			}
 			
 			resultArea.setContainerDataSource(container);
@@ -254,14 +215,23 @@ public final class AstWebViewer extends UI
 		}
 
 		@SuppressWarnings("unchecked")
-		private void addContent(HierarchicalContainer container, Ast astNode) {
+		private void addContent(HierarchicalContainer container, JsonNode jsonNode) {
 			
-			Item item = container.addItem(astNode);
+			StringBuilder elementInContainerView = new StringBuilder();
 			
-			item.getItemProperty("Name").setValue(astNode);
-			item.getItemProperty("Type").setValue(astNode.getType());
-			item.getItemProperty("LineNo").setValue(astNode.getLineNo());
-			item.getItemProperty("ColumnNo").setValue(astNode.getColumnNo());
+			//To view element's name as Object[lineNo x columnNo]
+			elementInContainerView.append(jsonNode.findValue("text")).append("[")
+				.append(jsonNode.findValue("lineNo"))
+				.append("x").append(jsonNode.findValue("columnNo")).append("]");
+			
+			Item item = container.addItem(Integer.parseInt(jsonNode.findValue("id").toString()));
+			
+			item.getItemProperty("Name").setValue(elementInContainerView.toString());
+			item.getItemProperty("Type").setValue(jsonNode.findValue("type").toString());
+			item.getItemProperty("LineNo").setValue(Integer.parseInt(jsonNode
+					  .findValue("lineNo").toString()));
+			item.getItemProperty("ColumnNo").setValue(Integer.parseInt(jsonNode
+					  .findValue("columnNo").toString()));
 		}
 		
 	}

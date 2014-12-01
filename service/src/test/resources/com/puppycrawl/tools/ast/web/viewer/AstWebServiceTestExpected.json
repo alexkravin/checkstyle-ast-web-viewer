@@ -1,406 +1,602 @@
-{"package[1x0]": [{
-  "text" : "package",
-  "type" : 16,
-  "lineNo" : 1,
-  "columnNo" : 0,
-  "Child nodes:" : [ {
+{
+  "package[1x0]" : {
+    "text" : "package",
+    "type" : "PACKAGE_DEF",
+    "lineNo" : 1,
+    "columnNo" : 0,
+    "id" : 0,
+    "parentId" : -1
+  },
+  "ANNOTATIONS[1x8]" : {
     "text" : "ANNOTATIONS",
-    "type" : 158,
+    "type" : "ANNOTATIONS",
     "lineNo" : 1,
-    "columnNo" : 8
-  }, {
+    "columnNo" : 8,
+    "id" : 1,
+    "parentId" : 0
+  },
+  "com[1x8]" : {
     "text" : "com",
-    "type" : 58,
+    "type" : "IDENT",
     "lineNo" : 1,
-    "columnNo" : 8
-  }, {
+    "columnNo" : 8,
+    "id" : 2,
+    "parentId" : 0
+  },
+  ";[1x11]" : {
     "text" : ";",
-    "type" : 45,
+    "type" : "SEMI",
     "lineNo" : 1,
-    "columnNo" : 11
-  } ]
-}],"import[3x0]": [{
-  "text" : "import",
-  "type" : 30,
-  "lineNo" : 3,
-  "columnNo" : 0,
-  "Child nodes:" : [ {
+    "columnNo" : 11,
+    "id" : 3,
+    "parentId" : 0
+  },
+  "import[3x0]" : {
+    "text" : "import",
+    "type" : "IMPORT",
+    "lineNo" : 3,
+    "columnNo" : 0,
+    "id" : 4,
+    "parentId" : -1
+  },
+  ".[3x14]" : {
     "text" : ".",
-    "type" : 59,
+    "type" : "DOT",
     "lineNo" : 3,
     "columnNo" : 14,
-    "Child nodes:" : [ {
-      "text" : ".",
-      "type" : 59,
-      "lineNo" : 3,
-      "columnNo" : 11,
-      "Child nodes:" : [ {
-        "text" : "java",
-        "type" : 58,
-        "lineNo" : 3,
-        "columnNo" : 7
-      }, {
-        "text" : "io",
-        "type" : 58,
-        "lineNo" : 3,
-        "columnNo" : 12
-      } ]
-    }, {
-      "text" : "File",
-      "type" : 58,
-      "lineNo" : 3,
-      "columnNo" : 15
-    } ]
-  }, {
-    "text" : ";",
-    "type" : 45,
-    "lineNo" : 3,
-    "columnNo" : 19
-  } ]
-}],"import[4x0]": [{
-  "text" : "import",
-  "type" : 30,
-  "lineNo" : 4,
-  "columnNo" : 0,
-  "Child nodes:" : [ {
+    "id" : 5,
+    "parentId" : 4
+  },
+  ".[3x11]" : {
     "text" : ".",
-    "type" : 59,
+    "type" : "DOT",
+    "lineNo" : 3,
+    "columnNo" : 11,
+    "id" : 6,
+    "parentId" : 5
+  },
+  "java[3x7]" : {
+    "text" : "java",
+    "type" : "IDENT",
+    "lineNo" : 3,
+    "columnNo" : 7,
+    "id" : 7,
+    "parentId" : 6
+  },
+  "io[3x12]" : {
+    "text" : "io",
+    "type" : "IDENT",
+    "lineNo" : 3,
+    "columnNo" : 12,
+    "id" : 8,
+    "parentId" : 6
+  },
+  "File[3x15]" : {
+    "text" : "File",
+    "type" : "IDENT",
+    "lineNo" : 3,
+    "columnNo" : 15,
+    "id" : 9,
+    "parentId" : 5
+  },
+  ";[3x19]" : {
+    "text" : ";",
+    "type" : "SEMI",
+    "lineNo" : 3,
+    "columnNo" : 19,
+    "id" : 10,
+    "parentId" : 4
+  },
+  "import[4x0]" : {
+    "text" : "import",
+    "type" : "IMPORT",
+    "lineNo" : 4,
+    "columnNo" : 0,
+    "id" : 11,
+    "parentId" : -1
+  },
+  ".[4x16]" : {
+    "text" : ".",
+    "type" : "DOT",
     "lineNo" : 4,
     "columnNo" : 16,
-    "Child nodes:" : [ {
-      "text" : ".",
-      "type" : 59,
-      "lineNo" : 4,
-      "columnNo" : 11,
-      "Child nodes:" : [ {
-        "text" : "java",
-        "type" : 58,
-        "lineNo" : 4,
-        "columnNo" : 7
-      }, {
-        "text" : "util",
-        "type" : 58,
-        "lineNo" : 4,
-        "columnNo" : 12
-      } ]
-    }, {
-      "text" : "List",
-      "type" : 58,
-      "lineNo" : 4,
-      "columnNo" : 17
-    } ]
-  }, {
-    "text" : ";",
-    "type" : 45,
+    "id" : 12,
+    "parentId" : 11
+  },
+  ".[4x11]" : {
+    "text" : ".",
+    "type" : "DOT",
     "lineNo" : 4,
-    "columnNo" : 21
-  } ]
-}],"CLASS_DEF[6x0]": [{
-  "text" : "CLASS_DEF",
-  "type" : 14,
-  "lineNo" : 6,
-  "columnNo" : 0,
-  "Child nodes:" : [ {
-    "text" : "MODIFIERS",
-    "type" : 5,
+    "columnNo" : 11,
+    "id" : 13,
+    "parentId" : 12
+  },
+  "java[4x7]" : {
+    "text" : "java",
+    "type" : "IDENT",
+    "lineNo" : 4,
+    "columnNo" : 7,
+    "id" : 14,
+    "parentId" : 13
+  },
+  "util[4x12]" : {
+    "text" : "util",
+    "type" : "IDENT",
+    "lineNo" : 4,
+    "columnNo" : 12,
+    "id" : 15,
+    "parentId" : 13
+  },
+  "List[4x17]" : {
+    "text" : "List",
+    "type" : "IDENT",
+    "lineNo" : 4,
+    "columnNo" : 17,
+    "id" : 16,
+    "parentId" : 12
+  },
+  ";[4x21]" : {
+    "text" : ";",
+    "type" : "SEMI",
+    "lineNo" : 4,
+    "columnNo" : 21,
+    "id" : 17,
+    "parentId" : 11
+  },
+  "CLASS_DEF[6x0]" : {
+    "text" : "CLASS_DEF",
+    "type" : "CLASS_DEF",
     "lineNo" : 6,
     "columnNo" : 0,
-    "Child nodes:" : [ {
-      "text" : "public",
-      "type" : 62,
-      "lineNo" : 6,
-      "columnNo" : 0
-    } ]
-  }, {
+    "id" : 18,
+    "parentId" : -1
+  },
+  "MODIFIERS[6x0]" : {
+    "text" : "MODIFIERS",
+    "type" : "MODIFIERS",
+    "lineNo" : 6,
+    "columnNo" : 0,
+    "id" : 19,
+    "parentId" : 18
+  },
+  "public[6x0]" : {
+    "text" : "public",
+    "type" : "LITERAL_PUBLIC",
+    "lineNo" : 6,
+    "columnNo" : 0,
+    "id" : 20,
+    "parentId" : 19
+  },
+  "class[6x7]" : {
     "text" : "class",
-    "type" : 69,
+    "type" : "LITERAL_CLASS",
     "lineNo" : 6,
-    "columnNo" : 7
-  }, {
+    "columnNo" : 7,
+    "id" : 21,
+    "parentId" : 18
+  },
+  "Test[6x13]" : {
     "text" : "Test",
-    "type" : 58,
+    "type" : "IDENT",
     "lineNo" : 6,
-    "columnNo" : 13
-  }, {
+    "columnNo" : 13,
+    "id" : 22,
+    "parentId" : 18
+  },
+  "OBJBLOCK[6x18]" : {
     "text" : "OBJBLOCK",
-    "type" : 6,
+    "type" : "OBJBLOCK",
     "lineNo" : 6,
     "columnNo" : 18,
-    "Child nodes:" : [ {
-      "text" : "{",
-      "type" : 72,
-      "lineNo" : 6,
-      "columnNo" : 18
-    }, {
-      "text" : "METHOD_DEF",
-      "type" : 9,
-      "lineNo" : 8,
-      "columnNo" : 2,
-      "Child nodes:" : [ {
-        "text" : "MODIFIERS",
-        "type" : 5,
-        "lineNo" : 8,
-        "columnNo" : 2,
-        "Child nodes:" : [ {
-          "text" : "public",
-          "type" : 62,
-          "lineNo" : 8,
-          "columnNo" : 2
-        }, {
-          "text" : "static",
-          "type" : 64,
-          "lineNo" : 8,
-          "columnNo" : 9
-        } ]
-      }, {
-        "text" : "TYPE",
-        "type" : 13,
-        "lineNo" : 8,
-        "columnNo" : 16,
-        "Child nodes:" : [ {
-          "text" : "void",
-          "type" : 49,
-          "lineNo" : 8,
-          "columnNo" : 16
-        } ]
-      }, {
-        "text" : "main",
-        "type" : 58,
-        "lineNo" : 8,
-        "columnNo" : 21
-      }, {
-        "text" : "(",
-        "type" : 76,
-        "lineNo" : 8,
-        "columnNo" : 25
-      }, {
-        "text" : "PARAMETERS",
-        "type" : 20,
-        "lineNo" : 8,
-        "columnNo" : 32,
-        "Child nodes:" : [ {
-          "text" : "PARAMETER_DEF",
-          "type" : 21,
-          "lineNo" : 8,
-          "columnNo" : 32,
-          "Child nodes:" : [ {
-            "text" : "MODIFIERS",
-            "type" : 5,
-            "lineNo" : 8,
-            "columnNo" : 32
-          }, {
-            "text" : "TYPE",
-            "type" : 13,
-            "lineNo" : 8,
-            "columnNo" : 32,
-            "Child nodes:" : [ {
-              "text" : "[",
-              "type" : 17,
-              "lineNo" : 8,
-              "columnNo" : 32,
-              "Child nodes:" : [ {
-                "text" : "String",
-                "type" : 58,
-                "lineNo" : 8,
-                "columnNo" : 26
-              }, {
-                "text" : "]",
-                "type" : 48,
-                "lineNo" : 8,
-                "columnNo" : 33
-              } ]
-            } ]
-          }, {
-            "text" : "args",
-            "type" : 58,
-            "lineNo" : 8,
-            "columnNo" : 35
-          } ]
-        } ]
-      }, {
-        "text" : ")",
-        "type" : 77,
-        "lineNo" : 8,
-        "columnNo" : 39
-      }, {
-        "text" : "{",
-        "type" : 7,
-        "lineNo" : 8,
-        "columnNo" : 41,
-        "Child nodes:" : [ {
-          "text" : "EXPR",
-          "type" : 28,
-          "lineNo" : 9,
-          "columnNo" : 9,
-          "Child nodes:" : [ {
-            "text" : "(",
-            "type" : 27,
-            "lineNo" : 9,
-            "columnNo" : 9,
-            "Child nodes:" : [ {
-              "text" : "print",
-              "type" : 58,
-              "lineNo" : 9,
-              "columnNo" : 4
-            }, {
-              "text" : "ELIST",
-              "type" : 34,
-              "lineNo" : 9,
-              "columnNo" : 10
-            }, {
-              "text" : ")",
-              "type" : 77,
-              "lineNo" : 9,
-              "columnNo" : 10
-            } ]
-          } ]
-        }, {
-          "text" : ";",
-          "type" : 45,
-          "lineNo" : 9,
-          "columnNo" : 11
-        }, {
-          "text" : "}",
-          "type" : 73,
-          "lineNo" : 10,
-          "columnNo" : 2
-        } ]
-      } ]
-    }, {
-      "text" : "METHOD_DEF",
-      "type" : 9,
-      "lineNo" : 12,
-      "columnNo" : 2,
-      "Child nodes:" : [ {
-        "text" : "MODIFIERS",
-        "type" : 5,
-        "lineNo" : 12,
-        "columnNo" : 2,
-        "Child nodes:" : [ {
-          "text" : "private",
-          "type" : 61,
-          "lineNo" : 12,
-          "columnNo" : 2
-        }, {
-          "text" : "static",
-          "type" : 64,
-          "lineNo" : 12,
-          "columnNo" : 10
-        } ]
-      }, {
-        "text" : "TYPE",
-        "type" : 13,
-        "lineNo" : 12,
-        "columnNo" : 17,
-        "Child nodes:" : [ {
-          "text" : "void",
-          "type" : 49,
-          "lineNo" : 12,
-          "columnNo" : 17
-        } ]
-      }, {
-        "text" : "print",
-        "type" : 58,
-        "lineNo" : 12,
-        "columnNo" : 22
-      }, {
-        "text" : "(",
-        "type" : 76,
-        "lineNo" : 12,
-        "columnNo" : 27
-      }, {
-        "text" : "PARAMETERS",
-        "type" : 20,
-        "lineNo" : 12,
-        "columnNo" : 28
-      }, {
-        "text" : ")",
-        "type" : 77,
-        "lineNo" : 12,
-        "columnNo" : 28
-      }, {
-        "text" : "{",
-        "type" : 7,
-        "lineNo" : 12,
-        "columnNo" : 30,
-        "Child nodes:" : [ {
-          "text" : "EXPR",
-          "type" : 28,
-          "lineNo" : 13,
-          "columnNo" : 22,
-          "Child nodes:" : [ {
-            "text" : "(",
-            "type" : 27,
-            "lineNo" : 13,
-            "columnNo" : 22,
-            "Child nodes:" : [ {
-              "text" : ".",
-              "type" : 59,
-              "lineNo" : 13,
-              "columnNo" : 14,
-              "Child nodes:" : [ {
-                "text" : ".",
-                "type" : 59,
-                "lineNo" : 13,
-                "columnNo" : 10,
-                "Child nodes:" : [ {
-                  "text" : "System",
-                  "type" : 58,
-                  "lineNo" : 13,
-                  "columnNo" : 4
-                }, {
-                  "text" : "out",
-                  "type" : 58,
-                  "lineNo" : 13,
-                  "columnNo" : 11
-                } ]
-              }, {
-                "text" : "println",
-                "type" : 58,
-                "lineNo" : 13,
-                "columnNo" : 15
-              } ]
-            }, {
-              "text" : "ELIST",
-              "type" : 34,
-              "lineNo" : 13,
-              "columnNo" : 23,
-              "Child nodes:" : [ {
-                "text" : "EXPR",
-                "type" : 28,
-                "lineNo" : 13,
-                "columnNo" : 23,
-                "Child nodes:" : [ {
-                  "text" : "\"Hello\"",
-                  "type" : 139,
-                  "lineNo" : 13,
-                  "columnNo" : 23
-                } ]
-              } ]
-            }, {
-              "text" : ")",
-              "type" : 77,
-              "lineNo" : 13,
-              "columnNo" : 30
-            } ]
-          } ]
-        }, {
-          "text" : ";",
-          "type" : 45,
-          "lineNo" : 13,
-          "columnNo" : 31
-        }, {
-          "text" : "}",
-          "type" : 73,
-          "lineNo" : 14,
-          "columnNo" : 2
-        } ]
-      } ]
-    }, {
-      "text" : "}",
-      "type" : 73,
-      "lineNo" : 16,
-      "columnNo" : 0
-    } ]
-  } ]
-}]}
+    "id" : 23,
+    "parentId" : 18
+  },
+  "{[6x18]" : {
+    "text" : "{",
+    "type" : "LCURLY",
+    "lineNo" : 6,
+    "columnNo" : 18,
+    "id" : 24,
+    "parentId" : 23
+  },
+  "METHOD_DEF[8x2]" : {
+    "text" : "METHOD_DEF",
+    "type" : "METHOD_DEF",
+    "lineNo" : 8,
+    "columnNo" : 2,
+    "id" : 25,
+    "parentId" : 23
+  },
+  "MODIFIERS[8x2]" : {
+    "text" : "MODIFIERS",
+    "type" : "MODIFIERS",
+    "lineNo" : 8,
+    "columnNo" : 2,
+    "id" : 26,
+    "parentId" : 25
+  },
+  "public[8x2]" : {
+    "text" : "public",
+    "type" : "LITERAL_PUBLIC",
+    "lineNo" : 8,
+    "columnNo" : 2,
+    "id" : 27,
+    "parentId" : 26
+  },
+  "static[8x9]" : {
+    "text" : "static",
+    "type" : "LITERAL_STATIC",
+    "lineNo" : 8,
+    "columnNo" : 9,
+    "id" : 28,
+    "parentId" : 26
+  },
+  "TYPE[8x16]" : {
+    "text" : "TYPE",
+    "type" : "TYPE",
+    "lineNo" : 8,
+    "columnNo" : 16,
+    "id" : 29,
+    "parentId" : 25
+  },
+  "void[8x16]" : {
+    "text" : "void",
+    "type" : "LITERAL_VOID",
+    "lineNo" : 8,
+    "columnNo" : 16,
+    "id" : 30,
+    "parentId" : 29
+  },
+  "main[8x21]" : {
+    "text" : "main",
+    "type" : "IDENT",
+    "lineNo" : 8,
+    "columnNo" : 21,
+    "id" : 31,
+    "parentId" : 25
+  },
+  "([8x25]" : {
+    "text" : "(",
+    "type" : "LPAREN",
+    "lineNo" : 8,
+    "columnNo" : 25,
+    "id" : 32,
+    "parentId" : 25
+  },
+  "PARAMETERS[8x32]" : {
+    "text" : "PARAMETERS",
+    "type" : "PARAMETERS",
+    "lineNo" : 8,
+    "columnNo" : 32,
+    "id" : 33,
+    "parentId" : 25
+  },
+  "PARAMETER_DEF[8x32]" : {
+    "text" : "PARAMETER_DEF",
+    "type" : "PARAMETER_DEF",
+    "lineNo" : 8,
+    "columnNo" : 32,
+    "id" : 34,
+    "parentId" : 33
+  },
+  "MODIFIERS[8x32]" : {
+    "text" : "MODIFIERS",
+    "type" : "MODIFIERS",
+    "lineNo" : 8,
+    "columnNo" : 32,
+    "id" : 35,
+    "parentId" : 34
+  },
+  "TYPE[8x32]" : {
+    "text" : "TYPE",
+    "type" : "TYPE",
+    "lineNo" : 8,
+    "columnNo" : 32,
+    "id" : 36,
+    "parentId" : 34
+  },
+  "[[8x32]" : {
+    "text" : "[",
+    "type" : "ARRAY_DECLARATOR",
+    "lineNo" : 8,
+    "columnNo" : 32,
+    "id" : 37,
+    "parentId" : 36
+  },
+  "String[8x26]" : {
+    "text" : "String",
+    "type" : "IDENT",
+    "lineNo" : 8,
+    "columnNo" : 26,
+    "id" : 38,
+    "parentId" : 37
+  },
+  "][8x33]" : {
+    "text" : "]",
+    "type" : "RBRACK",
+    "lineNo" : 8,
+    "columnNo" : 33,
+    "id" : 39,
+    "parentId" : 37
+  },
+  "args[8x35]" : {
+    "text" : "args",
+    "type" : "IDENT",
+    "lineNo" : 8,
+    "columnNo" : 35,
+    "id" : 40,
+    "parentId" : 34
+  },
+  ")[8x39]" : {
+    "text" : ")",
+    "type" : "RPAREN",
+    "lineNo" : 8,
+    "columnNo" : 39,
+    "id" : 41,
+    "parentId" : 25
+  },
+  "{[8x41]" : {
+    "text" : "{",
+    "type" : "SLIST",
+    "lineNo" : 8,
+    "columnNo" : 41,
+    "id" : 42,
+    "parentId" : 25
+  },
+  "EXPR[9x9]" : {
+    "text" : "EXPR",
+    "type" : "EXPR",
+    "lineNo" : 9,
+    "columnNo" : 9,
+    "id" : 43,
+    "parentId" : 42
+  },
+  "([9x9]" : {
+    "text" : "(",
+    "type" : "METHOD_CALL",
+    "lineNo" : 9,
+    "columnNo" : 9,
+    "id" : 44,
+    "parentId" : 43
+  },
+  "print[9x4]" : {
+    "text" : "print",
+    "type" : "IDENT",
+    "lineNo" : 9,
+    "columnNo" : 4,
+    "id" : 45,
+    "parentId" : 44
+  },
+  "ELIST[9x10]" : {
+    "text" : "ELIST",
+    "type" : "ELIST",
+    "lineNo" : 9,
+    "columnNo" : 10,
+    "id" : 46,
+    "parentId" : 44
+  },
+  ")[9x10]" : {
+    "text" : ")",
+    "type" : "RPAREN",
+    "lineNo" : 9,
+    "columnNo" : 10,
+    "id" : 47,
+    "parentId" : 44
+  },
+  ";[9x11]" : {
+    "text" : ";",
+    "type" : "SEMI",
+    "lineNo" : 9,
+    "columnNo" : 11,
+    "id" : 48,
+    "parentId" : 42
+  },
+  "}[10x2]" : {
+    "text" : "}",
+    "type" : "RCURLY",
+    "lineNo" : 10,
+    "columnNo" : 2,
+    "id" : 49,
+    "parentId" : 42
+  },
+  "METHOD_DEF[12x2]" : {
+    "text" : "METHOD_DEF",
+    "type" : "METHOD_DEF",
+    "lineNo" : 12,
+    "columnNo" : 2,
+    "id" : 50,
+    "parentId" : 23
+  },
+  "MODIFIERS[12x2]" : {
+    "text" : "MODIFIERS",
+    "type" : "MODIFIERS",
+    "lineNo" : 12,
+    "columnNo" : 2,
+    "id" : 51,
+    "parentId" : 50
+  },
+  "private[12x2]" : {
+    "text" : "private",
+    "type" : "LITERAL_PRIVATE",
+    "lineNo" : 12,
+    "columnNo" : 2,
+    "id" : 52,
+    "parentId" : 51
+  },
+  "static[12x10]" : {
+    "text" : "static",
+    "type" : "LITERAL_STATIC",
+    "lineNo" : 12,
+    "columnNo" : 10,
+    "id" : 53,
+    "parentId" : 51
+  },
+  "TYPE[12x17]" : {
+    "text" : "TYPE",
+    "type" : "TYPE",
+    "lineNo" : 12,
+    "columnNo" : 17,
+    "id" : 54,
+    "parentId" : 50
+  },
+  "void[12x17]" : {
+    "text" : "void",
+    "type" : "LITERAL_VOID",
+    "lineNo" : 12,
+    "columnNo" : 17,
+    "id" : 55,
+    "parentId" : 54
+  },
+  "print[12x22]" : {
+    "text" : "print",
+    "type" : "IDENT",
+    "lineNo" : 12,
+    "columnNo" : 22,
+    "id" : 56,
+    "parentId" : 50
+  },
+  "([12x27]" : {
+    "text" : "(",
+    "type" : "LPAREN",
+    "lineNo" : 12,
+    "columnNo" : 27,
+    "id" : 57,
+    "parentId" : 50
+  },
+  "PARAMETERS[12x28]" : {
+    "text" : "PARAMETERS",
+    "type" : "PARAMETERS",
+    "lineNo" : 12,
+    "columnNo" : 28,
+    "id" : 58,
+    "parentId" : 50
+  },
+  ")[12x28]" : {
+    "text" : ")",
+    "type" : "RPAREN",
+    "lineNo" : 12,
+    "columnNo" : 28,
+    "id" : 59,
+    "parentId" : 50
+  },
+  "{[12x30]" : {
+    "text" : "{",
+    "type" : "SLIST",
+    "lineNo" : 12,
+    "columnNo" : 30,
+    "id" : 60,
+    "parentId" : 50
+  },
+  "EXPR[13x22]" : {
+    "text" : "EXPR",
+    "type" : "EXPR",
+    "lineNo" : 13,
+    "columnNo" : 22,
+    "id" : 61,
+    "parentId" : 60
+  },
+  "([13x22]" : {
+    "text" : "(",
+    "type" : "METHOD_CALL",
+    "lineNo" : 13,
+    "columnNo" : 22,
+    "id" : 62,
+    "parentId" : 61
+  },
+  ".[13x14]" : {
+    "text" : ".",
+    "type" : "DOT",
+    "lineNo" : 13,
+    "columnNo" : 14,
+    "id" : 63,
+    "parentId" : 62
+  },
+  ".[13x10]" : {
+    "text" : ".",
+    "type" : "DOT",
+    "lineNo" : 13,
+    "columnNo" : 10,
+    "id" : 64,
+    "parentId" : 63
+  },
+  "System[13x4]" : {
+    "text" : "System",
+    "type" : "IDENT",
+    "lineNo" : 13,
+    "columnNo" : 4,
+    "id" : 65,
+    "parentId" : 64
+  },
+  "out[13x11]" : {
+    "text" : "out",
+    "type" : "IDENT",
+    "lineNo" : 13,
+    "columnNo" : 11,
+    "id" : 66,
+    "parentId" : 64
+  },
+  "println[13x15]" : {
+    "text" : "println",
+    "type" : "IDENT",
+    "lineNo" : 13,
+    "columnNo" : 15,
+    "id" : 67,
+    "parentId" : 63
+  },
+  "ELIST[13x23]" : {
+    "text" : "ELIST",
+    "type" : "ELIST",
+    "lineNo" : 13,
+    "columnNo" : 23,
+    "id" : 68,
+    "parentId" : 62
+  },
+  "EXPR[13x23]" : {
+    "text" : "EXPR",
+    "type" : "EXPR",
+    "lineNo" : 13,
+    "columnNo" : 23,
+    "id" : 69,
+    "parentId" : 68
+  },
+  "\"Hello\"[13x23]" : {
+    "text" : "\"Hello\"",
+    "type" : "STRING_LITERAL",
+    "lineNo" : 13,
+    "columnNo" : 23,
+    "id" : 70,
+    "parentId" : 69
+  },
+  ")[13x30]" : {
+    "text" : ")",
+    "type" : "RPAREN",
+    "lineNo" : 13,
+    "columnNo" : 30,
+    "id" : 71,
+    "parentId" : 62
+  },
+  ";[13x31]" : {
+    "text" : ";",
+    "type" : "SEMI",
+    "lineNo" : 13,
+    "columnNo" : 31,
+    "id" : 72,
+    "parentId" : 60
+  },
+  "}[14x2]" : {
+    "text" : "}",
+    "type" : "RCURLY",
+    "lineNo" : 14,
+    "columnNo" : 2,
+    "id" : 73,
+    "parentId" : 60
+  },
+  "}[16x0]" : {
+    "text" : "}",
+    "type" : "RCURLY",
+    "lineNo" : 16,
+    "columnNo" : 0,
+    "id" : 74,
+    "parentId" : 23
+  }
+}

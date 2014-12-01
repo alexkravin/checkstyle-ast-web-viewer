@@ -27,7 +27,7 @@ public final class AstWebServiceController {
 	
 	/**
 	 * Handles <b>POST</b> request containing java source file (in String representation).
-	 * Builds an AST object from these sources and converts AST to Json.
+	 * Builds AST object from these sources and converts AST to Json.
 	 * @param fullText 
 	 * 			String representation of java source file.
 	 * @return	Json representation of AST.

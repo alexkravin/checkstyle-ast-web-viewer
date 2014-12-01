@@ -11,7 +11,7 @@
   <name>commons</name>
   
   <properties>
-		<checkstyle.version>5.8</checkstyle.version>
+		<checkstyle.version>5.9</checkstyle.version>
 	</properties>
   
   <dependencies>
